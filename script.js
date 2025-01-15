@@ -1,21 +1,26 @@
+
         const colorPicker = document.getElementById("colorPicker");
         const canvascolor = document.getElementById("canvascolor");
         const canvas = document.getElementById("mycanvas");
         const clearbutton = document.getElementById("clearbutton");
         const savebutton = document.getElementById("savebutton");
-        const Fontsize = document.getElementById("Fontsize");
-        const retrievebutton = document.getElementById("retrievebutton");
+        const fontpicker= document.getElementById("fontpicker");
+        const retrievebutton= document.getElementById("retrievebutton");
         const ctx = canvas.getContext("2d");
-       
+        let lastX = 0;
+        let lastY = 0;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         colorPicker.addEventListener('change' , (e)=>{
             ctx.strokeStyle = e.target.value;
-            ctx.fillStyle = e.target.value;
         })
 
         canvas.addEventListener('mousedown',(e)=>{
             isDrawing = true;
-            lastX = event.offsetX;
-            lastY = event.offsetY;
+            lastX = e.offsetX;
+            lastY = e.offsetY;
         })
 
         canvas.addEventListener('mousemove', (e)=>{
@@ -25,27 +30,34 @@
                 ctx.lineTo(event.offsetX,event.offsetY);
                 ctx.stroke();
 
-                lastX = event.offsetX;
-                lastY = event.offsetY;
+                lastX = e.offsetX;
+                lastY = e.offsetY;
             }
 
         })
 
-        canvas.addEventListener('mouseup',() =>{
-            isDrawing=false;
+        canvas.addEventListener('mouseup',()=>{
+            isDrawing = false;
         })
 
         canvascolor.addEventListener('change',(e)=>{
-            ctx.fillStyle = e.target.value;
-            ctx.fillRect(0,0,800,500);
+            ctx.fillStyle= e.target.value;
+            ctx.fillRect(0,0,700,450)
         })
 
-        Fontsize.addEventListener('change',(e)=>{
-            ctx.lineWidth = e.target.value;
+        fontpicker.addEventListener('change',(e)=>{
+-
+            ctx.lineWidth= parseInst(e.target.value);
++
+            ctx.lineWidth = parseInt(e.target.value, 10);
         })
-        clearbutton.addEventListener('click' ,()=>{
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        clearbutton.addEventListener('click',()=>{
+            ctx.clearRect(0,0,canvas.width,canvas.height)
+            ctx.fillStyle = canvascolor.value; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         })
+
         savebutton.addEventListener('click',()=>{
             localStorage.setItem('canvasContent',canvas.toDataURL());
             let link = document.createElement('a');
@@ -56,11 +68,11 @@
         })
 
         retrievebutton.addEventListener('click',()=>{
-            let savedCanvas = localStorage.getItem('canvasContents');
-
+            let savedCanvas = localStorage.getItem('canvasContent');
             if(savedCanvas){
                 let img = new Image();
-                img.src = savedCanvas;
-                ctx.drawImage(img,0,0);
+                img.src= savedCanvas;
+                ctx.drawImage(img,0,0)
             }
         })
+
